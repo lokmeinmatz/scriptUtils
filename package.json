@@ -17,6 +17,6 @@
   },
   "bin": {
     "addTimes": "./addTimes.js",
-    "renameConditional": "./renameConditional.js",
+    "renameConditional": "./renameConditional.js"
   }
 }

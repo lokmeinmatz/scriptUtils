@@ -103,36 +103,42 @@ function timeToStr(time) {
     return `${time.h.toString().padStart(2, '0')}:${time.m.toString().padStart(2, '0')}:${time.s.toString().padStart(2, '0')}`
 }
 
-let resTime = {h: 0, m: 0, s: 0}
+// in secs
+let resTime = 0
 
 for (const t of times) {
     console.log(`${t.op} ${timeToStr(t.time)}`)
     switch (t.op) {
         case '+':
-            resTime.h += t.time.h    
-            resTime.m += t.time.m
-            resTime.s += t.time.s
+            resTime += t.time.h * 3600
+            resTime += t.time.m * 60
+            resTime += t.time.s
             break;
             case '-':  
-            resTime.h -= t.time.h    
-            resTime.m -= t.time.m
-            resTime.s -= t.time.s
+            resTime -= t.time.h * 3600
+            resTime -= t.time.m * 60
+            resTime -= t.time.s
             break;
         default:
             console.error('unknown op: ' + t.op)
             break;
     }
 }
+console.log(resTime)
 
 // normalize time
-// TODO not working with subraction (try 12:32 1:30 - 1:50:2)
-resTime.m += Math.floor(resTime.s / 60)
-resTime.s -= Math.floor(resTime.s / 60) * 60
-resTime.h += Math.floor(resTime.m / 60)
-resTime.m -= Math.floor(resTime.m / 60) * 60
+const resObj = {h: 0, m: 0, s: 0}
+
+resObj.s = Math.abs(resTime) % 60
+resTime -= Math.sign(resTime) * resObj.s
+
+resObj.m = (Math.abs(resTime) % 3600) / 60
+resTime -= Math.sign(resTime) * resObj.m * 60
+
+resObj.h = resTime / 3600
 
 console.log('------------------')
 
-console.log('  ' + timeToStr(resTime))
+console.log('  ' + timeToStr(resObj))
 
 console.log('==================')
